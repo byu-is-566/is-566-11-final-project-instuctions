@@ -46,7 +46,7 @@ You'll build a containerized Python ETL microservice that extracts data from Pos
 
 You'll add a third data source (web analytics from a REST API) orchestrated by Prefect, implement comprehensive data quality testing, and set up dbt Cloud for CI/CD. There's a twist: you'll use an AI agent to help you build the Prefect flow, documenting the process in a PRD and agent interaction log.
 
-**What you'll produce:** An orchestrated pipeline with automated testing, data quality checks, and a dead-letter pattern for failed records.
+**What you'll produce:** An orchestrated pipeline with automated testing and data quality checks.
 
 ### [Milestone 3: Agent Data Access and Portfolio Finalization](milestone-3-instructions.md)
 
@@ -65,7 +65,7 @@ When you're done, your repository will demonstrate:
 - **Cloud data warehousing** with Snowflake (staging, loading, transformation)
 - **dbt transformation** with staging, intermediate, and analytical models
 - **Workflow orchestration** with Prefect (scheduling, retries, error handling)
-- **Data quality** with dbt tests, source freshness monitoring, and dead-letter patterns
+- **Data quality** with dbt tests and source freshness monitoring
 - **CI/CD** with dbt Cloud (scheduled builds, pull request validation)
 - **AI agent access** via the dbt MCP server
 - **Production-grade documentation** including architecture diagrams, technical decisions, and quantified metrics

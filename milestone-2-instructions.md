@@ -6,7 +6,7 @@ Now we're going to build on top of it. Milestone 2 adds three things to your dat
 
 1. **A new data source.** Adventure Works wants to understand customer browsing behavior on its website. We'll pull web analytics (clickstream) data from a REST API and land it in Snowflake.
 2. **Orchestration with Prefect.** Instead of running a Python script manually, we'll use Prefect (remember Assignment 8?) to orchestrate the new pipeline with scheduling, retries, and observability.
-3. **Data quality infrastructure.** We'll add dbt tests, source freshness checks, and a dead-letter pattern so that bad data gets caught instead of silently corrupting your warehouse.
+3. **Data quality infrastructure.** We'll add dbt tests and source freshness checks so that bad data gets caught instead of silently corrupting your warehouse.
 
 There's one more twist: you'll build the Prefect flow using an AI agent. Not because the agent will do better work than you can, but because learning to work effectively with AI tools is a skill that every data engineer needs right now. You'll write a requirements document first, hand it to an agent, review what it generates, fix what's broken, and document the entire process.
 
@@ -48,7 +48,7 @@ Here is an updated system overview showing where the new Milestone 2 components 
 │  (Chat Logs) │       │    ├── orders_raw           │
 └──────────────┘       │    ├── chat_logs_raw         │
                        │    ├── web_analytics_raw  ◄──── NEW
-       Prefect ──────> │    └── web_analytics_quar ◄──── NEW (dead-letter)
+       Prefect ──────> │                             │
        (orchestrates   │                             │
         API ingestion) │  dbt (staging + intermediate)│
                        │    ├── stg_web_analytics  ◄──── NEW
@@ -115,12 +115,11 @@ This is **spec-driven development**: you wrote the spec (your PRD), and now you 
 Your Prefect flow must:
 
 1. **Pull clickstream events** from the web analytics API. Handle HTTP errors, rate limits (429), and timeouts with retries and backoff.
-2. **Clean and validate** the data. Cast types, handle nulls, deduplicate records, and separate bad records from good ones.
+2. **Clean and validate** the data. Cast types, handle nulls, and deduplicate records.
 3. **Stage cleaned data** in a Snowflake internal stage (the stage DDL is in `prefect/snowflake_objects.sql`).
 4. **Load into a raw table** using Snowflake's COPY INTO command.
 5. **Clean up staged files** after a successful load.
-6. **Route failed records** to a quarantine table (dead-letter pattern). Records that fail validation should land in `RAW_EXT.web_analytics_quarantine` with the original data and the reason they failed.
-7. **Log summary statistics**: records fetched, cleaned, loaded, and quarantined.
+6. **Log summary statistics**: records fetched, cleaned, and loaded.
 
 The flow should use Prefect 2.0 tasks and flows, connect to Snowflake using environment variables from `.env`, and be deployable via the Docker Compose services already defined in `compose.yml`.
 
@@ -138,7 +137,7 @@ How you build this is up to you. Some approaches:
 Whatever approach you take, **you are responsible for the final result**. Understand every line of code in your flow.
 
 > [!IMPORTANT]
-> Do not blindly accept AI-generated code. AI agents frequently get Snowflake-specific syntax wrong (they default to PostgreSQL patterns), miss edge cases in error handling, and implement the dead-letter pattern incorrectly. Review everything.
+> Do not blindly accept AI-generated code. AI agents frequently get Snowflake-specific syntax wrong (they default to PostgreSQL patterns) and miss edge cases in error handling. Review everything.
 
 ### 2.3 Test Your Flow
 
@@ -187,7 +186,7 @@ Now that your Prefect flow is loading data into `RAW_EXT.web_analytics_raw`, we 
 Before dbt can reference your web analytics data, the raw table and stage need to exist in Snowflake. Open `prefect/snowflake_objects.sql` and run all three statements in a Snowflake worksheet:
 
 ```sql
--- Creates the internal stage, raw table, and quarantine table
+-- Creates the internal stage and raw table
 -- See prefect/snowflake_objects.sql for the full DDL
 ```
 
@@ -305,9 +304,6 @@ If you haven't already (from Task 2), make sure your Prefect flow includes:
 
 - **Try/except blocks** around API calls and Snowflake operations
 - **Logging** at each major step (with record counts, not just "step completed")
-- **Dead-letter handling:** Records that fail validation go to `RAW_EXT.web_analytics_quarantine` instead of being silently dropped
-
-Your flow should include a dead-letter task that inserts failed records into the quarantine table. Make sure your data cleaning logic actually captures and passes along the failed records rather than silently dropping them.
 
 ### 4.5 Run All Tests
 
@@ -321,7 +317,7 @@ Review the output. All tests should pass. If any fail, read the error message ca
 
 📷 **Screenshot checkpoint:** Take a screenshot of `dbt source freshness` output.
 
-**Deliverables:** Custom test implementation, source freshness configuration, dead-letter logic in flow
+**Deliverables:** Custom test implementation, source freshness configuration
 
 ---
 
@@ -379,7 +375,6 @@ Update your README to reflect the new components from Milestone 2 (you'll create
 - REST API as a new data source
 - Prefect as the orchestration layer for web analytics
 - Web analytics raw, staging, and intermediate tables
-- The quarantine (dead-letter) table
 - dbt Cloud as the scheduled build and CI/CD system
 
 You can use any diagramming tool (draw.io, Excalidraw, Mermaid, or even ASCII art like the one at the top of this README).
@@ -390,7 +385,7 @@ Add a "Milestone 2" section to your README that covers:
 
 - What you built and why
 - The three data sources now flowing through your pipeline
-- Your data quality strategy (tests, freshness, dead-letter pattern)
+- Your data quality strategy (tests, freshness checks)
 - A link to your agent log with a brief summary of the experience
 - Updated setup instructions (new environment variables, Prefect services)
 
@@ -426,7 +421,7 @@ git push
 
 ## What You've Accomplished
 
-Take a moment to appreciate what you have now. Your data platform ingests from three sources (PostgreSQL, MongoDB, REST API), orchestrates ingestion with Prefect, lands raw data in Snowflake, transforms it through staging and intermediate layers with dbt, validates quality with automated tests and freshness checks, catches bad data with a dead-letter pattern, and deploys to production with dbt Cloud scheduling and CI/CD.
+Take a moment to appreciate what you have now. Your data platform ingests from three sources (PostgreSQL, MongoDB, REST API), orchestrates ingestion with Prefect, lands raw data in Snowflake, transforms it through staging and intermediate layers with dbt, validates quality with automated tests and freshness checks, and deploys to production with dbt Cloud scheduling and CI/CD.
 
 That's not a homework assignment. That's a data platform. And you built it.
 
@@ -445,7 +440,7 @@ See you there.
 | `prefect/agent_log.md` | Your agent interaction log (from template) |
 | `prefect/Dockerfile` | Docker image for Prefect flow |
 | `prefect/pyproject.toml` | Python dependencies for Prefect |
-| `prefect/snowflake_objects.sql` | DDL for raw table, stage, and quarantine table |
+| `prefect/snowflake_objects.sql` | DDL for raw table and stage |
 | `dbt/models-m2/staging/web_analytics/sources.yml` | dbt source definition with freshness and tests |
 | `dbt/models-m2/staging/web_analytics/stg_web_analytics.sql` | Staging model for web analytics |
 | `dbt/models-m2/intermediate/int_web_analytics_with_customers.sql` | Intermediate model joining with customers |
