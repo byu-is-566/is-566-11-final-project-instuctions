@@ -198,26 +198,26 @@ SHOW TABLES IN SCHEMA RAW_EXT;
 SHOW STAGES IN SCHEMA RAW_EXT;
 ```
 
-### 3.2 Review the dbt Source Definition
+### 3.2 Create the dbt Source Definition
 
-Look at `dbt/models-m2_sol/staging/web_analytics/sources.yml`. This file defines `web_analytics_raw` as a dbt source, with column descriptions and tests. It also configures source freshness (we'll use that in Task 4).
+Create `dbt/models-m2/staging/web_analytics/sources.yml`. This file should define `web_analytics_raw` as a dbt source, with column descriptions and tests. It should also configure source freshness (we'll use that in Task 4).
 
-Notice that it includes a `relationships` test on `customer_id` that links back to your existing `stg_adventure_db__customers` model. This is how dbt validates referential integrity across your data sources.
+Include a `relationships` test on `customer_id` that links back to your existing `stg_adventure_db__customers` model. This is how dbt validates referential integrity across your data sources.
 
-### 3.3 Review the Staging Model
+### 3.3 Create the Staging Model
 
-Open `dbt/models-m2_sol/staging/web_analytics/stg_web_analytics.sql`. This is a complete staging model (not a skeleton) that:
+Create `dbt/models-m2/staging/web_analytics/stg_web_analytics.sql`. Your staging model should:
 
-- Pulls from the `raw_ext.web_analytics_raw` source
-- Casts columns to consistent types
-- Normalizes timestamps to UTC
-- Adds `dbt_loaded_at` metadata
+- Pull from the `raw_ext.web_analytics_raw` source
+- Cast columns to consistent types
+- Normalize timestamps to UTC
+- Add `dbt_loaded_at` metadata
 
-Compare it to your existing staging models (like `stg_adventure_db__customers.sql`). Notice the same pattern: source CTE, cleaning CTE, final select.
+Use your existing staging models (like `stg_adventure_db__customers.sql`) as a reference. Follow the same pattern: source CTE, cleaning CTE, final select.
 
-### 3.4 Review the Intermediate Model
+### 3.4 Create the Intermediate Model
 
-Open `dbt/models-m2_sol/intermediate/int_web_analytics_with_customers.sql`. This joins your web analytics data with customer attributes from Milestone 1. After this model runs, you'll be able to answer questions like "Which customers from the US viewed the most product pages?"
+Create `dbt/models-m2/intermediate/int_web_analytics_with_customers.sql`. This model should join your web analytics data with customer attributes from Milestone 1. After this model runs, you'll be able to answer questions like "Which customers from the US viewed the most product pages?"
 
 ### 3.5 Register the New Model Path
 
@@ -446,9 +446,9 @@ See you there.
 | `prefect/Dockerfile` | Docker image for Prefect flow |
 | `prefect/pyproject.toml` | Python dependencies for Prefect |
 | `prefect/snowflake_objects.sql` | DDL for raw table, stage, and quarantine table |
-| `dbt/models-m2_sol/staging/web_analytics/sources.yml` | dbt source definition with freshness and tests |
-| `dbt/models-m2_sol/staging/web_analytics/stg_web_analytics.sql` | Staging model for web analytics |
-| `dbt/models-m2_sol/intermediate/int_web_analytics_with_customers.sql` | Intermediate model joining with customers |
+| `dbt/models-m2/staging/web_analytics/sources.yml` | dbt source definition with freshness and tests |
+| `dbt/models-m2/staging/web_analytics/stg_web_analytics.sql` | Staging model for web analytics |
+| `dbt/models-m2/intermediate/int_web_analytics_with_customers.sql` | Intermediate model joining with customers |
 | `templates/m2/web_analytics_row_count_minimum.sql` | Custom test: minimum row count (copy to `dbt/tests/`) |
 | `templates/m2/web_analytics_freshness_check.sql` | Custom test: data freshness — you implement (copy to `dbt/tests/`) |
 | `templates/m2/dbt_cloud_setup.md` | Step-by-step dbt Cloud configuration guide |
