@@ -171,7 +171,8 @@ Open `templates/m2/agent_log_template.md` and complete it. Whether you used AI a
 
 Save this as `prefect/agent_log.md`.
 
-📷 **Screenshot checkpoint:** Take a screenshot of the Prefect flow running successfully (terminal output or Prefect UI showing a completed run).
+> [!IMPORTANT]
+> 📷 Grab a screenshot of the Prefect flow running successfully (terminal output or Prefect UI showing a completed run). Save this screenshot as `m2_task2.4.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 **Deliverables:** Completed `prefect/flows/web_analytics_flow.py`, `prefect/prd.md`, `prefect/agent_log.md`
 
@@ -246,9 +247,11 @@ SELECT COUNT(*) FROM dbt.stg_web_analytics;
 SELECT * FROM dbt.int_web_analytics_with_customers LIMIT 10;
 ```
 
-📷 **Screenshot checkpoint:** Take a screenshot of your Snowflake raw table showing sample web analytics data.
+> [!IMPORTANT]
+> 📷 Grab a screenshot of your Snowflake raw table showing sample web analytics data. Save this screenshot as `m2_task3.6a.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
-📷 **Screenshot checkpoint:** Take a screenshot of `dbt build` output showing the new models created successfully.
+> [!IMPORTANT]
+> 📷 Grab a screenshot of `dbt build` output showing the new models created successfully. Save this screenshot as `m2_task3.6b.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 **Deliverables:** New dbt models, updated sources.yml
 
@@ -313,9 +316,11 @@ dbt test
 
 Review the output. All tests should pass. If any fail, read the error message carefully. It tells you exactly what went wrong.
 
-📷 **Screenshot checkpoint:** Take a screenshot of `dbt test` output with all tests passing.
+> [!IMPORTANT]
+> 📷 Grab a screenshot of `dbt test` output with all tests passing. Save this screenshot as `m2_task4.5a.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
-📷 **Screenshot checkpoint:** Take a screenshot of `dbt source freshness` output.
+> [!IMPORTANT]
+> 📷 Grab a screenshot of `dbt source freshness` output. Save this screenshot as `m2_task4.5b.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 **Deliverables:** Custom test implementation, source freshness configuration
 
@@ -350,11 +355,14 @@ Manually trigger your scheduled job and confirm it completes successfully. Then 
 > [!IMPORTANT]
 > The `templates/m2/dbt_cloud_setup.md` file has detailed instructions for each step, including troubleshooting tips for common issues. Follow it carefully and take screenshots at each checkpoint.
 
-📷 **Screenshot checkpoint:** Take a screenshot of your dbt Cloud project dashboard.
+> [!IMPORTANT]
+> 📷 Grab a screenshot of your dbt Cloud project dashboard. Save this screenshot as `m2_task5.6a.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
-📷 **Screenshot checkpoint:** Take a screenshot of a successful scheduled job run.
+> [!IMPORTANT]
+> 📷 Grab a screenshot of a successful scheduled job run. Save this screenshot as `m2_task5.6b.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
-📷 **Screenshot checkpoint:** Take a screenshot of a pull request with the CI job running.
+> [!IMPORTANT]
+> 📷 Grab a screenshot of a pull request with the CI job running. Save this screenshot as `m2_task5.6c.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 **Deliverables:** Completed `templates/m2/dbt_cloud_setup.md` with evidence, working scheduled and CI jobs
 
@@ -411,9 +419,11 @@ git commit -m "Milestone 2: Add web analytics pipeline, dbt quality checks, and 
 git push
 ```
 
-📷 **Screenshot checkpoint:** Take a screenshot of your completed agent log.
+> [!IMPORTANT]
+> 📷 Grab a screenshot of your completed agent log. Save this screenshot as `m2_task6.5a.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
-📷 **Screenshot checkpoint:** Take a screenshot of your Git commit history showing meaningful commit messages.
+> [!IMPORTANT]
+> 📷 Grab a screenshot of your Git commit history showing meaningful commit messages. Save this screenshot as `m2_task6.5b.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 **Deliverables:** Completed `prefect/agent_log.md`, updated README with Milestone 2 section and architecture diagram, clean Git history
 

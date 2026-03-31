@@ -118,7 +118,7 @@ If things aren't working, check these common issues:
 - [ ] Server logs show "Registering dbt cli tools"
 
 > [!IMPORTANT]
-> 📷 Take a screenshot showing the MCP server running in your terminal with the "Uvicorn running" message. Save it as `screenshots/task_1_mcp_server_running.png`.
+> 📷 Grab a screenshot showing the MCP server running in your terminal with the "Uvicorn running" message. Save this screenshot as `m3_task1.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 ---
 
@@ -217,7 +217,7 @@ Every `description:` field should have meaningful content. No empty strings, no 
 - [ ] Descriptions use plain English, not SQL syntax
 
 > [!IMPORTANT]
-> 📷 Take a screenshot showing one of your updated model YAML entries with full descriptions. Save it as `screenshots/task_2_model_docs.png`.
+> 📷 Grab a screenshot showing one of your updated model YAML entries with full descriptions. Save this screenshot as `m3_task2.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 ---
 
@@ -341,7 +341,7 @@ The quality of the agent's answers depends directly on the quality of your model
 - [ ] Error handling works (script continues past individual failures)
 
 > [!IMPORTANT]
-> 📷 Take a screenshot showing the tail of your `demo_output.log` file. Save it as `screenshots/task_3_demo_output.png`.
+> 📷 Grab a screenshot showing the tail of your `demo_output.log` file. Save this screenshot as `m3_task3.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 ---
 
@@ -395,7 +395,13 @@ This is the multi-part capstone. You're transforming your project from a class a
 
 ### 5.1 - Restructure Your README into Portfolio Format
 
-Replace your current assignment-focused `README.md` with a portfolio-ready version. This is what a hiring manager will see first when they look at your repo, so make it count. Your README should include:
+Replace your current assignment-focused `README.md` with a portfolio-ready version. Start by copying the provided template:
+
+```bash
+cp templates/m3/portfolio_readme_template.md README.md
+```
+
+Open `README.md` and fill in every `[TODO: ...]` placeholder with real content from your project. This is what a hiring manager will see first when they look at your repo, so make it count. Your README should include:
 
 1. **Project title and one-line description** — what this is, in plain English
 2. **Architecture diagram** — embed your diagram or link to the image from Task 5.2
@@ -491,7 +497,7 @@ Before you call it done, review everything one more time:
 - [ ] No placeholder text or TODO comments anywhere in documentation
 
 > [!IMPORTANT]
-> 📷 Take a screenshot of your final README rendered on GitHub (push first, then view on GitHub). Save it as `screenshots/task_5_portfolio_readme.png`.
+> 📷 Grab a screenshot of your final README rendered on GitHub (push first, then view on GitHub). Save this screenshot as `m3_task5.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 ---
 

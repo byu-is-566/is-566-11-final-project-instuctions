@@ -275,7 +275,7 @@ LIST @chat_stage;
 ```
 
 > [!IMPORTANT]
-> 📷 Take a screenshot of the processor logs showing a complete cycle (extract, stage, copy, cleanup). This will be part of your evidence in Milestone 3.
+> 📷 Grab a screenshot of the processor logs showing a complete cycle (extract, stage, copy, cleanup). Save this screenshot as `m1_task2.3.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 **Success Criteria:**
 - Raw tables exist in Snowflake and are being populated.
@@ -337,13 +337,13 @@ The last step is to present our insights in a user-friendly way. We need an anal
 
 ## Task 5: Clean Up and Document
 
-Before submitting Milestone 1, make sure your project is clean and tells a coherent story. You'll do the heavier portfolio documentation work in Milestone 3, but now is the time to build good habits.
+Before submitting Milestone 1, make sure your project is clean and tells a coherent story. You'll do the heavier portfolio documentation work in Milestone 3, but now is the time to build good habits. Commented code, explanations, etc., should all be completed now while it's fresh.
 
 ### 5.1: Polish Your Code and README
 
 - Remove any debug print statements or commented-out experiments.
 - Make sure comments explain WHY, not WHAT (e.g., "Watermark prevents duplicate processing" not "Get the watermark").
-- Verify your README explains the business problem and how to run the project.
+- You may want to take a few notes that explain the business problem and how to run this portion of the project.
 - Include 2-3 screenshots at key verification steps (processor logs, raw table counts, dashboard).
 
 > [!TIP]
@@ -360,6 +360,6 @@ Before submitting Milestone 1, make sure your project is clean and tells a coher
 
 When you've completed all five tasks, take a step back and look at what you've built: a containerized ETL service that extracts from two different database systems, stages and loads data into a cloud warehouse, transforms it through a modern analytics engineering framework, and visualizes the results in a dashboard. That is a real, end-to-end data pipeline, and it's the kind of thing that data engineering teams build every day.
 
-Make sure everything is committed and pushed to your GitHub repository. We'll build on this foundation in Milestones 2 and 3, where we'll add orchestration, data quality checks, and an AI agent access layer.
+Make sure everything is committed and pushed to your GitHub repository **before the Milestone 1 deadline**. Whatever code is pushed by that deadline will be considered in the grading for Milestone 1. We'll build on this foundation in Milestones 2 and 3, where we'll add orchestration, data quality checks, and an AI agent access layer.
 
 You deserve my CONGRATULATIONS for making it through Milestone 1. This is complex stuff, and the fact that you've built a working pipeline from scratch is genuinely impressive. Well done.
