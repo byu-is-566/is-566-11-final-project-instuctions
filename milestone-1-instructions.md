@@ -92,11 +92,6 @@ Our team needs a lightweight ETL microservice to regularly collect data from two
 
 The processor will also handle loading and cleanup in Task 2, so this task focuses on getting extraction and staging working correctly first.
 
-> [!TIP]
-> Update: I ended up recording another video during one of the sections where I did some of the other setup tasks that you should have done prior to the "getting started" video below. There is some overlap between the videos, but between the two, you should be able to get FULLY setup and working. Head [here](https://www.dropbox.com/scl/fi/ru66gcp35js0hpmjmo2kc/earlier-setup-for-the-final-project.mp4?rlkey=2qyf2817kja3xj1use95h6au9&dl=0) to watch.
->
-> If you are feeling like you need a bit of a "Getting Started" guide with how to start building things out in python for this task, you're in luck. Here's a [careful walkthrough](https://www.dropbox.com/scl/fi/j5t1m96d5z1tkpjue5udy/How-to-get-started-Milestone-1.mp4?rlkey=2pw351w2dwco7owh309iud9sg&dl=0) that will get you fully up to speed with your code talking with one of the database services. Enjoy!
-
 - **Build a Python ETL process**: Develop a script or module that connects to the PostgreSQL and MongoDB sources and retrieves the required data (e.g. recent transactions related to our multi-week Adventure data scenario). Ensure the ETL logic can handle data from both sources and format it as needed for loading. There are two sales tables to extract from the PostgreSQL database, and one chat logs collection to extract from MongoDB. Each of these three extractions can be placed in their own stage on Snowflake. (In other words, this python script doesn't need to do any combining; we'll take care of that with dbt downstream.)
 
 > [!TIP]
