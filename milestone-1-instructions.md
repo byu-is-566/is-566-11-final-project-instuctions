@@ -301,7 +301,7 @@ Now that the raw data from our two sources is flowing into Snowflake automatical
 <img src="screenshots/readme_img/query_6.png"  width="80%">
 
 > [!IMPORTANT]
-> 📷 Grab a screenshot (and only one!) of your output from query 6 above. Save this screenshot as `m2_task3.png` (or jpg) to the `screenshots` folder in the assignment repository.
+> 📷 Grab a screenshot (and only one!) of your output from query 6 above. Save this screenshot as `m1_task3.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 
 ---
