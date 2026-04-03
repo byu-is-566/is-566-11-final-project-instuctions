@@ -273,13 +273,24 @@ Now that the raw data from our two sources is flowing into Snowflake automatical
 - **Test and iterate**: Run your dbt models to materialize the new tables, and verify the results. Check that the data looks correct (especially that your newly added data is showing up). The data being generated in the docker environment has _current_ dates, so this will be easy to verify. (Actually, I decided to provide a couple of sample queries to help you make sure you got this right. They are in a separate SQL file here in the repository.) You are also welcome to add a few basic tests that make sense on important fields to validate data integrity, but I'm not going to be overly prescriptive about this. While testing isn't the main focus of this milestone, just find some way to ensure the pipeline's transformations are reliable so the final analytics will be accurate.
 
 > [!IMPORTANT]
-> Before moving on, make sure that your system is doing exactly what is being asked in the instructions. We'll take some video evidence in Milestone 3.
+> Before moving on, make sure that your system is doing exactly what is being asked in the instructions. We'll do some evaluations of these components in Milestone 3.
 >
-> When you run the validation queries, you should see results that are similar to the two screenshots I've provided below. The only major difference you should expect between your query results and mine would be the first row where the rows (or items) are being counted; those values will depend on how many records you have accumulated in your warehouse from the docker generator. Otherwise, the proportions should be very similar to mine.
+> When you run the validation queries, you should see results that are similar to the screenshots I've provided below. Of course, the counts and dates will be different and depend on when and how long you have been running the generator process. Otherwise, the _proportions_ should be very similar to mine.
 
+### Check 1:
 <img src="screenshots/readme_img/query_1.png"  width="80%">
 
-<img src="screenshots/readme_img/query_2.png"  width="80%">
+### Check 3:
+<img src="screenshots/readme_img/query_3.png"  width="80%">
+
+### Check 4:
+<img src="screenshots/readme_img/query_4.png"  width="80%">
+
+### Check 5:
+<img src="screenshots/readme_img/query_5.png"  width="80%">
+
+### Check 6:
+<img src="screenshots/readme_img/query_6.png"  width="80%">
 
 ---
 
