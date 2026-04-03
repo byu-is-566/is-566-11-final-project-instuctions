@@ -204,7 +204,7 @@ docker compose up --build
 ```
 
 > [!WARNING]
-> **Snowflake credit usage:** Every time the processor runs a cycle, it uses your Snowflake warehouse (which costs credits). The default `PROCESSOR_INTERVAL_SEC=0` runs one cycle and exits — this is the safest option during development. If you change it to `300` for continuous operation, the processor and generator will automatically shut down after 1 hour (`PROCESSOR_MAX_RUNTIME_SEC=3600` in `.env`). You can change this timeout or set it to `0` to run indefinitely — but **remember to stop it when you're done** (`docker compose down`).
+> **Snowflake credit usage:** Every time the processor runs a cycle, it uses your Snowflake warehouse (which costs credits). The default `PROCESSOR_INTERVAL_SEC=0` runs one cycle and exits — this is the safest option during development. If you change it to `300` for continuous operation, the processor and generator will automatically shut down after 1 hour (`PROCESSOR_MAX_RUNTIME_SEC=3600` in `.env`). You can change this timeout or set it to `0` to run indefinitely — but **remember to stop it when you're done** (`docker compose down`). Your warehouse has resource monitors attached which will limit your daily credit consumption, and your warehouse will auto-suspend for the day if you exceed a reasonable usage threshold.
 
 Monitor the processor logs. You should see output similar to this for each cycle:
 
