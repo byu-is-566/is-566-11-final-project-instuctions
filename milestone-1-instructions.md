@@ -148,6 +148,8 @@ The processor will also handle loading and cleanup in Task 2, so this task focus
 > 
 > This works because Compose's `env_file` injects variables into the container's environment before your process starts — no file needs to exist inside the container. Locally, you can run `python main.py --env ../../.env` or just run from the project root.
 
+
+
 ---
 
 ## Task 2: Processor-Driven Loading and Stage Cleanup
@@ -298,6 +300,10 @@ Now that the raw data from our two sources is flowing into Snowflake automatical
 ### Check 6:
 <img src="screenshots/readme_img/query_6.png"  width="80%">
 
+> [!IMPORTANT]
+> 📷 Grab a screenshot (and only one!) of your output from query 6 above. Save this screenshot as `m2_task3.png` (or jpg) to the `screenshots` folder in the assignment repository.
+
+
 ---
 
 ## Task 4: Analytical View and Dashboard in Snowsight
@@ -318,12 +324,8 @@ The last step is to present our insights in a user-friendly way. We need an anal
 > 2. You have a dashboard that looks similar to mine above. (Getting a nice spread like you see in mine may require adding several thousand new records from the docker generator.)
 > 3. You can confirm that everything is flowing properly from one end to the other, which is easily demonstrated by (a) turning on the generator and letting it run for a few minutes, (b) allowing the processor to automatically load the data into raw tables, and then (c) re-running dbt from your terminal to pull the new records through the rest of the warehouse. If you look at the dashboard before and after doing a, b, and c, and you see the changes represented in your chart, then CONGRATULATIONS! You have officially implemented your first end-to-end data pipeline. Pretty awesome.
 
----
-
-## Task 5: Clean Up and Document
-
-Before submitting Milestone 1, make sure your project is clean and tells a coherent story. You'll do the heavier portfolio documentation work in Milestone 3, but now is the time to build good habits. Commented code, explanations, etc., should all be completed now while it's fresh.
-
+> [!IMPORTANT]
+> 📷 Grab a screenshot of your own dashboard chart similar to mine above. Save this screenshot as `m2_task4.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 ## Wrapping Up
 

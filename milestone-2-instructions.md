@@ -420,10 +420,8 @@ git push
 ```
 
 > [!IMPORTANT]
-> 📷 Grab a screenshot of your completed agent log. Save this screenshot as `m2_task6.5a.png` (or jpg) to the `screenshots` folder in the assignment repository.
+> 📷 Grab a screenshot of your completed agent log. Save this screenshot as `m2_task6.5.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
-> [!IMPORTANT]
-> 📷 Grab a screenshot of your Git commit history showing meaningful commit messages. Save this screenshot as `m2_task6.5b.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 **Deliverables:** Completed `prefect/agent_log.md`, updated README with Milestone 2 section and architecture diagram, clean Git history
 
