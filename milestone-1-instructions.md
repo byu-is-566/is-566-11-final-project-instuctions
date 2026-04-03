@@ -246,16 +246,13 @@ LIST @chat_stage;
 ```
 
 > [!IMPORTANT]
-> 📷 Grab a screenshot of the processor logs showing a complete cycle (extract, stage, copy, cleanup). Save this screenshot as `m1_task2.3.png` (or jpg) to the `screenshots` folder in the assignment repository.
+> 📷 Grab a screenshot of the processor logs showing a complete cycle (extract, stage, copy, cleanup). (And please make sure that the screenshot actually captures the `processor` container output, not the other noise from other containers.) Save this screenshot as `m1_task2.3.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 **Success Criteria:**
 - Raw tables exist in Snowflake and are being populated.
 - Processor logs show successful COPY INTO and REMOVE operations.
 - Stages are empty after each cycle (files are cleaned up after loading).
 - No Snowflake Tasks have been created.
-
-> [!TIP]
-> Depending on how much data accumulated in your stages during Task 1 development, it would be a great idea to manually clear them out before testing Task 2. Use `REMOVE @orders_stage;` etc. to empty them, then let the processor run a fresh cycle.
 
 ---
 
