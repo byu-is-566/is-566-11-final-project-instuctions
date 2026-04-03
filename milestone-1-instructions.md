@@ -325,7 +325,7 @@ The last step is to present our insights in a user-friendly way. We need an anal
 > 3. You can confirm that everything is flowing properly from one end to the other, which is easily demonstrated by (a) turning on the generator and letting it run for a few minutes, (b) allowing the processor to automatically load the data into raw tables, and then (c) re-running dbt from your terminal to pull the new records through the rest of the warehouse. If you look at the dashboard before and after doing a, b, and c, and you see the changes represented in your chart, then CONGRATULATIONS! You have officially implemented your first end-to-end data pipeline. Pretty awesome.
 
 > [!IMPORTANT]
-> 📷 Grab a screenshot of your own dashboard chart similar to mine above. Save this screenshot as `m2_task4.png` (or jpg) to the `screenshots` folder in the assignment repository.
+> 📷 Grab a screenshot of your own dashboard chart similar to mine above. Save this screenshot as `m1_task4.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 ## Wrapping Up
 
