@@ -114,13 +114,43 @@ The processor will also handle loading and cleanup in Task 2, so this task focus
 >
 > You'll know that your Task 1 is done when you:
 > 1. Have both the generator and processor running, seeing records consistently processed (but not consistently increasing, meaning that you're only pulling and processing new records). If you look at the logs for the processor container in Docker Desktop, you will likely see something similar to the first screenshot below.)
-> 2. You can run a `list @orders_stage`, `list @order_details_stage`, and `list @chat_stage` and see files staged there (and being constantly added, given the activity in #1 above). To be extra sure, you may want to first run `remove @orders_stage`, etc., and then make sure that the files being _currently_ generated are landing there in each stage. (See the second screenshot below for a glimpse of what it should look like when you've run a `list` command after clearing out the stage with `remove`.)
+> 2. You can run a `list @orders_stage`, `list @order_details_stage`, and `list @chat_stage` and see files staged there (and being constantly added, given the activity in #1 above). To be extra sure, you may want to: (a) turn off the `PROCESSOR_ENABLE_CLEANUP` variable in the .env file, (b) manually run `remove @orders_stage`, etc., and then make sure that the files being _currently_ generated are landing there in each stage. (See the second screenshot below for a glimpse of what it should look like when you've run a `list` command after clearing out the stage with `remove`.)
 
 <img src="screenshots/readme_img/docker_flowing.png"  width="80%">
 
 <img src="screenshots/readme_img/files_staged.png"  width="80%">
 
+> [!TIP]
+> Simplify your `.env` setup. The starter code uses separate `.env` files for local dev and Docker (`.env.dev` and `.env.docker`), which means maintaining duplicate credentials. You can eliminate this by using a single `.env` at the project root, as follows:
+> 
+> In `compose.yml`, point the processor's `env_file` at the root `.env` and remove the `--env` flag from the command:
+> 
+> 
+```yaml
+processor:
+  env_file:
+    - .env
+  command: ["uv", "run", "python", "main.py"]
+```
 
+> In `processor/utils/env_loader.py`, make the file argument optional so it works both locally and in Docker:
+> 
+> 
+```python
+def load_environment():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--env", default=None, help="Path to .env file")
+    args, _ = parser.parse_known_args()
+
+    if args.env:
+        if not os.path.exists(args.env):
+            raise FileNotFoundError(f".env file not found at {args.env}")
+        load_dotenv(dotenv_path=args.env)
+    else:
+        load_dotenv()  # loads .env from cwd if present, no-op if absent
+```
+
+> This works because Compose's `env_file` injects variables into the container's environment before your process starts — no file needs to exist inside the container. Locally, you can run `python main.py --env ../../.env` or just run from the project root.
 
 ---
 
