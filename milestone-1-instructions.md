@@ -114,11 +114,8 @@ The processor will also handle loading and cleanup in Task 2, so this task focus
 >
 > You'll know that your Task 1 is done when you:
 > 1. Have both the generator and processor running, seeing records consistently processed (but not consistently increasing, meaning that you're only pulling and processing new records). If you look at the logs for the processor container in Docker Desktop, you will likely see something similar to the first screenshot below.)
-> 2. You can run a `list @orders_stage`, `list @order_details_stage`, and `list @chat_stage` and see files staged there (and being constantly added, given the activity in #1 above). To be extra sure, you may want to: (a) turn off the `PROCESSOR_ENABLE_CLEANUP` variable in the .env file, (b) manually run `remove @orders_stage`, etc., and then make sure that the files being _currently_ generated are landing there in each stage. (See the second screenshot below for a glimpse of what it should look like when you've run a `list` command after clearing out the stage with `remove`.)
 
 <img src="screenshots/readme_img/docker_flowing.png"  width="80%">
-
-<img src="screenshots/readme_img/files_staged.png"  width="80%">
 
 > [!TIP]
 > Simplify your `.env` setup. The starter code uses separate `.env` files for local dev and Docker (`.env.dev` and `.env.docker`), which means maintaining duplicate credentials. You can eliminate this by using a single `.env` at the project root, as follows:
@@ -156,61 +153,9 @@ The processor will also handle loading and cleanup in Task 2, so this task focus
 
 With data now landing in the Snowflake stages, we need to get those staged files into raw tables so they can feed our dbt models downstream. In many production environments, orchestration tools like Airflow or Prefect handle this loading step. For our project, the Python processor itself will handle loading (COPY INTO) and cleanup (REMOVE) directly, which is simpler and gives us full control of the data lifecycle in one place.
 
-> [!IMPORTANT]
-> This milestone does NOT use Snowflake Tasks. Instead, your processor executes COPY INTO and REMOVE commands directly after staging files. This approach is simpler, avoids the risk of runaway credit consumption from tasks left running, and reflects a common real-world pattern where the ETL code owns the full lifecycle.
-
 ### 2.1: Create Raw Tables
 
-Before the processor can load data, you need raw tables ready to receive it. Use the provided `sql/create_raw_tables.sql` as a reference for the table schemas, and create these three tables manually in Snowflake:
-
-```sql
-USE SCHEMA raw_ext;
-
-CREATE TABLE IF NOT EXISTS orders_raw (
-    sales_order_id VARCHAR,
-    revision_number INT,
-    status VARCHAR,
-    online_order_flag BOOLEAN,
-    sales_order_number VARCHAR,
-    purchase_order_number VARCHAR,
-    account_number VARCHAR,
-    customer_id VARCHAR,
-    sales_person_id VARCHAR,
-    territory_id VARCHAR,
-    bill_to_address_id VARCHAR,
-    ship_to_address_id VARCHAR,
-    ship_method_id VARCHAR,
-    credit_card_id VARCHAR,
-    credit_card_approval_code VARCHAR,
-    currency_rate_id VARCHAR,
-    sub_total DECIMAL(18, 2),
-    tax_amt DECIMAL(18, 2),
-    freight DECIMAL(18, 2),
-    total_due DECIMAL(18, 2),
-    comment VARCHAR,
-    due_date TIMESTAMP,
-    order_date TIMESTAMP,
-    ship_date TIMESTAMP,
-    last_modified TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS order_details_raw (
-    sales_order_detail_id VARCHAR,
-    sales_order_id VARCHAR,
-    carrier_tracking_number VARCHAR,
-    order_qty INT,
-    product_id VARCHAR,
-    special_offer_id VARCHAR,
-    unit_price DECIMAL(18, 2),
-    unit_price_discount DECIMAL(18, 2),
-    line_total DECIMAL(18, 2),
-    last_modified TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS chat_logs_raw (
-    raw VARIANT
-);
-```
+Before the processor can load data, you need raw tables ready to receive it. Use the provided `sql/create_raw_tables.sql` as a reference for the table schemas, and create these three tables manually in Snowflake.
 
 > [!TIP]
 > Use `sql/create_raw_tables.sql` as a reference for the table schemas. The columns match the data your processor extracts.
@@ -245,7 +190,10 @@ The full processor cycle runs in this order:
 8. Log metrics
 
 > [!TIP]
-> Your orchestration code should implement a smart pattern: if COPY INTO fails for a stage, skip cleanup for that stage so the files stay available for retry on the next cycle. Store each copy result and check `result["status"]` before cleaning.
+> 1. Your orchestration code should implement a smart pattern: if COPY INTO fails for a stage, skip cleanup for that stage so the files stay available for retry on the next cycle. Store each copy result and check `result["status"]` before cleaning.
+> 2. You can run a `list @orders_stage`, `list @order_details_stage`, and `list @chat_stage` and see files staged there (and being constantly added, given the activity in #1 above). To be extra sure, you may want to: (a) turn off the `PROCESSOR_ENABLE_CLEANUP` variable in the .env file, (b) manually run `remove @orders_stage`, etc., and then make sure that the files being _currently_ generated are landing there in each stage. (See the screenshot below for a glimpse of what it should look like when you've run a `list` command after loading and before clearing out the stage with `remove`.)
+
+<img src="screenshots/readme_img/files_staged.png"  width="80%">
 
 ### 2.3: Test the Full Cycle
 
