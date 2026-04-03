@@ -273,7 +273,7 @@ Now that the raw data from our two sources is flowing into Snowflake automatical
 - **Test and iterate**: Run your dbt models to materialize the new tables, and verify the results. Check that the data looks correct (especially that your newly added data is showing up). The data being generated in the docker environment has _current_ dates, so this will be easy to verify. I have provided a few of sample queries to help you make sure you got this right: see the `sql/check_data_flow_queries.sql` file in the repository. 
 
 > >[!TIP] 
-> The `check_data_flow_queries.sql` file I originally distributed in the assignment had a bug in it. (Sorry!) If you're getting an error when you try to run some of the queries, you can find the fixed file posted and pinned to the `#help-please` channel in Slack.
+> The `check_data_flow_queries.sql` file I originally distributed in the assignment had a bug in it. (Sorry!) If you're getting an error when you try to run some of the queries, you can find the fixed file posted and pinned to the `#help-please` channel in Slack. (Or you can just replace the usage of `rows` in queries 3 and 6 with a non-protected column name like `row_count`.)
 
 > [!IMPORTANT]
 > Before moving on, make sure that your system is doing exactly what is being asked in the instructions. We'll do some evaluations of these components in Milestone 3.
