@@ -125,31 +125,29 @@ The processor will also handle loading and cleanup in Task 2, so this task focus
 > 
 > In `compose.yml`, point the processor's `env_file` at the root `.env` and remove the `--env` flag from the command:
 > 
+> ```yaml
+> processor:
+>   env_file:
+>     - .env
+>   command: ["uv", "run", "python", "main.py"]
+> ```
 > 
-```yaml
-processor:
-  env_file:
-    - .env
-  command: ["uv", "run", "python", "main.py"]
-```
-
 > In `processor/utils/env_loader.py`, make the file argument optional so it works both locally and in Docker:
 > 
+> ```python
+> def load_environment():
+>     parser = argparse.ArgumentParser()
+>     parser.add_argument("--env", default=None, help="Path to .env file")
+>     args, _ = parser.parse_known_args()
 > 
-```python
-def load_environment():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--env", default=None, help="Path to .env file")
-    args, _ = parser.parse_known_args()
-
-    if args.env:
-        if not os.path.exists(args.env):
-            raise FileNotFoundError(f".env file not found at {args.env}")
-        load_dotenv(dotenv_path=args.env)
-    else:
-        load_dotenv()  # loads .env from cwd if present, no-op if absent
-```
-
+>     if args.env:
+>         if not os.path.exists(args.env):
+>             raise FileNotFoundError(f".env file not found at {args.env}")
+>         load_dotenv(dotenv_path=args.env)
+>     else:
+>         load_dotenv()  # loads .env from cwd if present, no-op if absent
+> ```
+> 
 > This works because Compose's `env_file` injects variables into the container's environment before your process starts — no file needs to exist inside the container. Locally, you can run `python main.py --env ../../.env` or just run from the project root.
 
 ---
