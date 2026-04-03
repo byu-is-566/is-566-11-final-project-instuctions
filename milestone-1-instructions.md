@@ -27,7 +27,8 @@ is-566-11-final-project-1
 │ ├─ models-m1
 │ │ ├─ intermediate
 │ │ │  ├─ int_sales_order_line_items.sql
-│ │ │  └─ int_sales_orders_with_campaign.sql    # <-- Task 4
+│ │ │  ├─ int_sales_orders_with_campaign.sql
+│ │ │  └─ int_sales_order_with_customers.sql    # <-- Task 4
 │ │ ├─ models.yml
 │ │ └─ staging
 │ │    ├─ adventure_db
@@ -155,7 +156,7 @@ With data now landing in the Snowflake stages, we need to get those staged files
 
 ### 2.1: Create Raw Tables
 
-Before the processor can load data, you need raw tables ready to receive it. Use the provided `sql/create_raw_tables.sql` as a reference for the table schemas, and create these three tables manually in Snowflake.
+Before the processor can load data, you need raw tables ready to receive it. Use the provided `sql/create_raw_tables.sql` as a reference for the table schemas, and create these three tables manually in Snowflake. (If you want to make your life easier for testing later, you could also ask AI to help you automate the creation of those tables as a part of the `load.py` functionality, but that's up to you. It would make it easier to drop your whole data flow and then recreate both the stages and raw tables in the `RAW_EXT` schema. Not required, but maybe convenient.)
 
 > [!TIP]
 > Use `sql/create_raw_tables.sql` as a reference for the table schemas. The columns match the data your processor extracts.
@@ -267,7 +268,9 @@ Now that the raw data from our two sources is flowing into Snowflake automatical
 - **Develop base/staging models**: Create (or adapt existing) base/staging models that select from the raw source data and apply initial transformations/cleaning. Use the same conventions that we have been using in the last two projects, and make smart decisions that you could easily justify. The chat logs can go wherever you'd like them to go, but the two sales tables coming out of the PostgreSQL need to be formatted carefully so that they can be added to the existing sales table and downstream flow. Usually this type of integration formatting would happen early in the data flow (i.e., in the base table) so that we keep downstream stg and intermediate tables untouched if possible.
 
 >[!TIP]
-> To be clear, both tables of sales data that are coming out of your docker environment should be carefully added to the existing `stg_ecom__sales_orders` model from the last few weeks, potentially using some intermediary formatting in the associated base table(s). This will require you to (a) be very particular about the format and order of the columns, and (b) figure out how to nest the order detail data into the `order_detail` column that is found in the `stg_ecom__sales_orders` table. (You're essentially going to have to do a lateral flatten in reverse, if that makes sense.) To help narrow your search for how to get this done, I would look into the `ARRAY_AGG()` function.
+> 1. To be clear, both tables of sales data that are coming out of your docker environment should be carefully added to the existing `stg_ecom__sales_orders` model from the last few weeks, potentially using some intermediary formatting in the associated base table(s). This will require you to (a) be very particular about the format and order of the columns, and (b) figure out how to nest the order detail data into the `order_detail` column that is found in the `stg_ecom__sales_orders` table. (You're essentially going to have to do a lateral flatten in reverse, if that makes sense.) To help narrow your search for how to get this done, I would look into the `ARRAY_AGG()` function.
+> 
+> 2. Note also that, for various reasons, the sales data coming out of the generator system do NOT have any delivery estimate information. This is expected. That column can be empty for the records you're generating for this lab.
 
 - **Adhere to dbt best practices**: Organize your models properly in the project structure, probably using the same hierarchy that we've already been using. Again, your goal is to integrate your new functionality into the existing flow of data. (And you can use my directory tree up above if that helps, but you don't have to follow it exactly.)
 - **Test and iterate**: Run your dbt models to materialize the new tables, and verify the results. Check that the data looks correct (especially that your newly added data is showing up). The data being generated in the docker environment has _current_ dates, so this will be easy to verify. I have provided a few of sample queries to help you make sure you got this right: see the `sql/check_data_flow_queries.sql` file in the repository. 
@@ -305,13 +308,13 @@ The last step is to present our insights in a user-friendly way. We need an anal
 
 <img src="screenshots/readme_img/dashboard.png"  width="80%">
 
-- I create a top-level dbt model called `int_sales_orders_with_campaign` that aggregates or summarizes the sales data for the dashboard. This view will serve as the direct source for your dashboard.
+- **Create an analytical dbt model**: Develop a top-level dbt model that joins your staged sales order data with customer information (name, location, contact details) to create a single denormalized view suitable for dashboard consumption. This model builds on your silver-layer models from step 3. (For reference, I called mine `int_sales_order_with_customers`.) This view will serve as the direct source for your dashboard.
 - **Build the Snowsight dashboard**: Using the Snowsight interface in Snowflake, create a new dashboard. Add a chart for sales over time, similar to the one I've provided.
-- **Demonstrate end-to-end functionality**: Finally, verify that the _entire_ pipeline works together. Turn on your docker environment to generate data (perhaps with a large batch size?), let your processor run a few cycles to extract, stage, load, and clean, then (manually, for this milestone) execute dbt from your terminal to refresh models. Use the [validation queries I provided](https://github.com/byu-is-566/is-566-11-final-project-1-instructions/blob/main/check_data_flow_queries.sql) in this repository to verify that you are populating the sales data correctly. Finally, confirm that the Snowsight dashboard reflects the new data. This will prove that your containerized ETL, Snowflake loading, dbt transformations, and dashboard are all integrated. By completing this, you've essentially delivered a full-stack data pipeline: from source systems to an analytics dashboard.
+- **Demonstrate end-to-end functionality**: Finally, verify that the _entire_ pipeline works together. Turn on your docker environment to generate data (perhaps with a large batch size? See the option for adjusting the batch size in the docker compose file), let your processor run a few cycles to extract, stage, load, and clean, then (manually, for this milestone) execute dbt from your terminal to refresh models. Finally, confirm that the Snowsight dashboard reflects the new data. This will prove that your containerized ETL, Snowflake loading, dbt transformations, and dashboard are all integrated. By completing this, you've essentially delivered a full-stack data pipeline: from source systems to an analytics dashboard.
 
 > [!IMPORTANT]
 > You will know that you're done with this task when:
-> 1. The validation queries linked above are showing comparable proportions (with a few exceptions, most rows should show 1s in both columns).
+> 1. The validation queries discussed above are showing comparable proportions (with a few exceptions, most rows should show 1s in both columns).
 > 2. You have a dashboard that looks similar to mine above. (Getting a nice spread like you see in mine may require adding several thousand new records from the docker generator.)
 > 3. You can confirm that everything is flowing properly from one end to the other, which is easily demonstrated by (a) turning on the generator and letting it run for a few minutes, (b) allowing the processor to automatically load the data into raw tables, and then (c) re-running dbt from your terminal to pull the new records through the rest of the warehouse. If you look at the dashboard before and after doing a, b, and c, and you see the changes represented in your chart, then CONGRATULATIONS! You have officially implemented your first end-to-end data pipeline. Pretty awesome.
 
@@ -321,22 +324,6 @@ The last step is to present our insights in a user-friendly way. We need an anal
 
 Before submitting Milestone 1, make sure your project is clean and tells a coherent story. You'll do the heavier portfolio documentation work in Milestone 3, but now is the time to build good habits. Commented code, explanations, etc., should all be completed now while it's fresh.
 
-### 5.1: Polish Your Code and README
-
-- Remove any debug print statements or commented-out experiments.
-- Make sure comments explain WHY, not WHAT (e.g., "Watermark prevents duplicate processing" not "Get the watermark").
-- You may want to take a few notes that explain the business problem and how to run this portion of the project.
-- Include 2-3 screenshots at key verification steps (processor logs, raw table counts, dashboard).
-
-> [!TIP]
-> Write clear commit messages. Instead of "fix bug", write "Fix watermark calculation to use data timestamp, not system time." Your commit history should tell a story.
-
-**Success Criteria:**
-- README has a clear explanation of what the project does.
-- Code is clean and well-commented.
-- Screenshots show the pipeline working end-to-end.
-
----
 
 ## Wrapping Up
 
