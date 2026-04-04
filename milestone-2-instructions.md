@@ -102,7 +102,7 @@ Your Prefect flow must:
 The flow should use Prefect 2.0 tasks and flows, connect to Snowflake using environment variables from `.env`, and be deployable via the Docker Compose services already defined in `compose.yml`. Note also that the API has an `/agent-docs` endpoint that returns a markdown document designed to be pasted directly into an AI agent's context. 
 
 > [!TIP]
-> Don't rush this. A well-written PRD saves you time later. Spend 20-30 minutes thinking through the acceptance criteria and edge cases. You can use an agent to help you brainstorm about things you aren't thinking of, ask it to interview you to exlore the use case, and otherwise build out a full, comprehensive plan for this component of the system. Make sure that the PRD accounts for the API structure and interaction pattern, that it specifies where it should be adding code, that it is going to be running inside of the docker compose environment, and everything else relevant to this development task.
+> Don't rush this. A well-written PRD saves you time later. Spend 20-30 minutes thinking through the acceptance criteria and edge cases. You can use an agent to help you brainstorm about things you aren't thinking of, ask it to interview you to exlore the use case, and otherwise build out a full, comprehensive plan for this component of the system. Make sure that the PRD accounts for the API structure and interaction pattern, that it specifies where it should be adding code, that it is going to be running inside of the docker compose environment using variables from the `.env` file, and everything else relevant to this development task.
 
 ---
 
@@ -122,7 +122,7 @@ Now you cans hare your PRD and the API docs with your agent, ask it to build the
 > [!IMPORTANT]
 > Even though your agent is doing the building, **you are responsible for the final result**. Understand every line of code in your flow. Do not blindly accept AI-generated code. AI agents frequently get Snowflake-specific syntax wrong (they default to PostgreSQL patterns) and miss edge cases in error handling. Review everything.
 
-### 2.3 Test Your Flow
+### 2.2 Test Your Flow
 
 Verify your flow works end-to-end:
 
@@ -148,12 +148,12 @@ Verify your flow works end-to-end:
    SELECT COUNT(*), MIN(event_timestamp), MAX(event_timestamp) FROM RAW_EXT.web_analytics_raw;
    ```
 
-### 2.4 Document Your Process
+### 2.3 Document Your Process
 
 Use `prefect/agent_log.md` to document your development process: what worked, what didn't, what you'd do differently.
 
 > [!IMPORTANT]
-> 📷 Grab a screenshot of the Prefect flow running successfully (terminal output or Prefect UI showing a completed run). Save this screenshot as `m2_task2.4.png` (or jpg) to the `screenshots` folder in the assignment repository.
+> 📷 Grab a screenshot of the Prefect flow running successfully (terminal output or Prefect UI showing a completed run). Save this screenshot as `m2_task2.3.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 ---
 
