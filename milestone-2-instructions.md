@@ -148,6 +148,19 @@ Verify your flow works end-to-end:
    SELECT COUNT(*), MIN(event_timestamp), MAX(event_timestamp) FROM RAW_EXT.web_analytics_raw;
    ```
 
+Assuming your agent did its job, you should be able to access the prefect environment from `http://localhost:4200` and see that flows have run. I'll show a screenshot of what mine looked like, but of course yours might be very different because our agents will build things in their own way.
+
+<img src="screenshots/readme_img/flow_run.png"  width="80%">
+
+What the flow is producing in Snowflake, however, will be more deterministic. You should be able to run some test queries (including the count query in #4 above) to see data flowing into the `WEB_ANALYTICS_RAW` table. Here's what my data from that table looks like (with a SELECT *, limit 10 query):
+
+<img src="screenshots/readme_img/web_analytics_table.png"  width="80%">
+
+Poke around a bit to make sure you're comfortable with what your agent built, and to be sure that data is flowing all the way from API to Snowflake.
+
+> [!IMPORTANT]
+> 📷 Grab two screenshots: one of your own prefect flow having run successfully, and another of your `WEB_ANALYTICS_RAW` table populated from your prefect flow. Save these screenshots as `m2_task2.3a.png` and `m2_task2.3b.png`, respectively, to the `screenshots` folder in the assignment repository.
+
 ### 2.3 Document Your Process
 
 Use `prefect/agent_log.md` to document your development process: what worked, what didn't, what you'd do differently.
