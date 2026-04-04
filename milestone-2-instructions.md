@@ -65,26 +65,26 @@ This matters because AI agents are only as good as the instructions you give the
 
 Adventure Works currently has sales and customer data in the warehouse, but no visibility into what customers are doing on the website before they buy. Web analytics data (page views, clicks, add-to-cart events) would let analysts connect browsing behavior to purchasing patterns.
 
-Think about it: if a customer views a product page five times before purchasing, that tells you something different than a customer who buys on the first visit. This data closes that gap.
-
 ### 1.2 Explore the API
 
-The web analytics data comes from a REST API. Before writing your PRD, you need to understand the data contract. The API is self-documenting — explore it:
+The web analytics data comes from a REST API. Before writing your PRD, you need to understand the data contract. Start by browsing to the base URL — it has a landing page that explains the scenario and links to everything you need:
 
 **API Base URL:** `https://is566-web-analytics-api.fly.dev`
 
-| Endpoint | What it gives you |
-|----------|-------------------|
-| `/` | Overview with all available endpoints |
-| `/docs` | Interactive Swagger UI — try the endpoints live |
-| `/agent-docs` | Agent-friendly markdown — paste this into your AI tool |
-| `/example` | A single example event — inspect the data shape |
-| `/analytics/clickstream` | The actual data endpoint |
+From the landing page you can reach:
+
+| Page | What it gives you |
+|------|-------------------|
+| **Landing page** (`/`) | The scenario, quick-start examples, endpoint table, and event schema |
+| **Interactive docs** (`/docs`) | Swagger UI — explore endpoints, see schemas, and try requests live in your browser |
+| **Agent reference** (`/agent-docs`) | Plain-text markdown designed to paste into an AI coding agent's context |
+| **Example event** (`/example`) | A single event — quick way to inspect the data shape |
+| **Clickstream data** (`/analytics/clickstream`) | The actual data endpoint your flow will call |
 
 Set `API_BASE_URL=https://is566-web-analytics-api.fly.dev` in your `.env` file (uncomment the Milestone 2 section).
 
 > [!TIP]
-> Start by hitting `/example` in your browser to see what one record looks like. Then read `/agent-docs` for the full contract including field types, value ranges, and the incremental `since` parameter. Your PRD should be based on what you discover here, not on assumptions.
+> Start at the landing page to understand the scenario and data shape. Then open `/docs` to try the clickstream endpoint interactively — experiment with the `since` parameter to see how incremental pulls work. When you're ready to write your PRD, you can have your agent explore the `/agent-docs` page so it can understand field types, value ranges, and loading strategy. Your PRD should be based on what you (and/or your agent) discover here.
 
 ### 1.3 Complete the PRD Template
 
