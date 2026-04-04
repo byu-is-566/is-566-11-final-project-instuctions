@@ -88,26 +88,7 @@ Set `API_BASE_URL=https://is566-web-analytics-api.fly.dev` in your `.env` file (
 
 ### 1.3 Complete the PRD Template
 
-Open `templates/m2/prd_template.md`. This is a structured template with eight sections. Fill in each section based on what you learned from exploring the API.
-
-> [!TIP]
-> Don't rush this. A well-written PRD saves you time later. Spend 20-30 minutes thinking through the acceptance criteria and edge cases. What happens when the API is down? What happens when a record has a `customer_id` that doesn't exist in your customer table?
-
-### 1.4 Save Your PRD
-
-Save your completed document as `prefect/prd.md` (rename from the template). You'll use this to drive your implementation in Task 2.
-
-**Deliverable:** Completed `prefect/prd.md`
-
----
-
-## Task 2: Build Your Prefect Flow
-
-Remember building Prefect flows in Assignment 8? You're doing the same thing here, but with a real data source and real requirements. This time, you're starting from your PRD and building the entire flow yourself — with AI assistance if you choose.
-
-This is **spec-driven development**: you wrote the spec (your PRD), and now you build to that spec. The flow file at `prefect/flows/web_analytics_flow.py` is intentionally nearly empty — you're creating the architecture and implementation from scratch.
-
-### 2.1 Requirements
+Open `templates/m2/prd_template.md`. This is a structured template with eight sections. Fill in each section based on what you learned from exploring the API. Save your completed document as `prefect/prd.md` (rename from the template). You'll use this to drive your implementation in Task 2. 
 
 Your Prefect flow must:
 
@@ -118,23 +99,28 @@ Your Prefect flow must:
 5. **Clean up staged files** after a successful load.
 6. **Log summary statistics**: records fetched, cleaned, and loaded.
 
-The flow should use Prefect 2.0 tasks and flows, connect to Snowflake using environment variables from `.env`, and be deployable via the Docker Compose services already defined in `compose.yml`.
+The flow should use Prefect 2.0 tasks and flows, connect to Snowflake using environment variables from `.env`, and be deployable via the Docker Compose services already defined in `compose.yml`. Note also that the API has an `/agent-docs` endpoint that returns a markdown document designed to be pasted directly into an AI agent's context. 
 
 > [!TIP]
-> The API has an `/agent-docs` endpoint that returns a markdown document designed to be pasted directly into an AI agent's context. If you're using AI assistance, start there: `curl https://is566-web-analytics-api.fly.dev/agent-docs`
+> Don't rush this. A well-written PRD saves you time later. Spend 20-30 minutes thinking through the acceptance criteria and edge cases. You can use an agent to help you brainstorm about things you aren't thinking of, ask it to interview you to exlore the use case, and otherwise build out a full, comprehensive plan for this component of the system. Make sure that the PRD accounts for the API structure and interaction pattern, that it specifies where it should be adding code, that it is going to be running inside of the docker compose environment, and everything else relevant to this development task.
 
-### 2.2 Build It
+---
 
-How you build this is up to you. Some approaches:
+## Task 2: Build Your Prefect Flow
 
-- **AI-assisted**: Share your PRD and the API docs with your agent, ask it to build the flow, then review and iterate. Document the process in the agent log.
-- **Manual**: Build it yourself using what you learned in Assignment 8, referencing the Prefect and Snowflake docs.
-- **Hybrid**: Start with AI-generated code, then rewrite the parts that don't work.
-
-Whatever approach you take, **you are responsible for the final result**. Understand every line of code in your flow.
+This is **spec-driven development**: you wrote the spec (your PRD), and now you build to that spec. The flow file at `prefect/flows/web_analytics_flow.py` is intentionally nearly empty — you're creating the architecture and implementation from scratch.
 
 > [!IMPORTANT]
-> Do not blindly accept AI-generated code. AI agents frequently get Snowflake-specific syntax wrong (they default to PostgreSQL patterns) and miss edge cases in error handling. Review everything.
+> It's a good idea to **save and commit your changes locally** before you ask your agent to build anything out. If your agent does something unexpected that you didn't intend, you can always revert those changes and try again.
+
+### 2.1 Build It
+
+Open up the `agent_log_template.md` document and save a renamed copy to `prefect/agent_log.md`. You'll be filling this out as you build so that later (in Milestone 3) you can produce a recruiter-facing demonstration of your ability to interact with AI agents to do meaningful work. Don't worry too much about having your log be perfect or fully coherent; we'll refine it later. The goal is to capture your process so that you can remember what you did and how you interacted with the agent.
+
+Now you cans hare your PRD and the API docs with your agent, ask it to build the flow, then review and iterate. Document the process in the agent log.
+
+> [!IMPORTANT]
+> Even though your agent is doing the building, **you are responsible for the final result**. Understand every line of code in your flow. Do not blindly accept AI-generated code. AI agents frequently get Snowflake-specific syntax wrong (they default to PostgreSQL patterns) and miss edge cases in error handling. Review everything.
 
 ### 2.3 Test Your Flow
 
@@ -164,14 +150,10 @@ Verify your flow works end-to-end:
 
 ### 2.4 Document Your Process
 
-Open `templates/m2/agent_log_template.md` and complete it. Whether you used AI assistance or not, document your development process: what worked, what didn't, what you'd do differently.
-
-Save this as `prefect/agent_log.md`.
+Use `prefect/agent_log.md` to document your development process: what worked, what didn't, what you'd do differently.
 
 > [!IMPORTANT]
 > 📷 Grab a screenshot of the Prefect flow running successfully (terminal output or Prefect UI showing a completed run). Save this screenshot as `m2_task2.4.png` (or jpg) to the `screenshots` folder in the assignment repository.
-
-**Deliverables:** Completed `prefect/flows/web_analytics_flow.py`, `prefect/prd.md`, `prefect/agent_log.md`
 
 ---
 
