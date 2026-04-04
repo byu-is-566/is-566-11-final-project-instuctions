@@ -31,26 +31,26 @@ Make sure you have the following from Milestone 1:
 Here is an updated system overview showing where the new Milestone 2 components fit:
 
 ```
-                                ┌──────────────────┐
+                                ┌───────────────────┐
                                 │   REST API        │
                                 │  (Web Analytics)  │  <-- NEW (Milestone 2)
-                                └────────┬─────────┘
+                                └────────┬──────────┘
                                          │
-┌──────────────┐                         │                    ┌──────────────┐
-│  PostgreSQL  │──┐                      │                    │  dbt Cloud   │
-│  (Sales)     │  │    ┌─────────────────┼──────────┐        │  (CI/CD)     │
-└──────────────┘  ├──> │   Snowflake Warehouse      │ <──────│              │
-┌──────────────┐  │    │                             │        └──────────────┘
-│  MongoDB     │──┘    │  RAW_EXT (raw tables)       │
-│  (Chat Logs) │       │    ├── orders_raw           │
+┌──────────────┐                         │                     ┌──────────────┐
+│  PostgreSQL  │──┐                      │                     │  dbt Cloud   │
+│  (Sales)     │  │    ┌─────────────────┼────────────┐        │  (CI/CD)     │
+└──────────────┘  ├──> │   Snowflake Warehouse        │ <──────│              │
+┌──────────────┐  │    │                              │        └──────────────┘
+│  MongoDB     │──┘    │  RAW_EXT (raw tables)        │
+│  (Chat Logs) │       │    ├── orders_raw            │
 └──────────────┘       │    ├── chat_logs_raw         │
                        │    ├── web_analytics_raw  ◄──── NEW
-       Prefect ──────> │                             │
-       (orchestrates   │                             │
+       Prefect ──────> │                              │
+       (orchestrates   │                              │
         API ingestion) │  dbt (staging + intermediate)│
                        │    ├── stg_web_analytics  ◄──── NEW
                        │    └── int_web_analytics  ◄──── NEW
-                       └─────────────────────────────┘
+                       └──────────────────────────────┘
 ```
 
 ---
