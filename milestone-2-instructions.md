@@ -26,10 +26,7 @@ Make sure you have the following from Milestone 1:
 - [ ] Your repository is committed and pushed to GitHub
 
 > [!IMPORTANT]
-> If your Milestone 1 pipeline is not working, fix it first. Milestone 2 builds directly on top of it. Everything we do here assumes your Snowflake raw tables are populated and your dbt staging models are running.
-
-> [!TIP]
-> You'll notice the processor service is commented out in the updated `compose.yml`. That's intentional — Milestone 2 focuses on the new Prefect-based web analytics pipeline, not on re-running the M1 processor. Your M1 raw data is already in Snowflake. If you need to reload M1 data later, just uncomment the processor service and run `docker compose up -d`.
+> If your Milestone 1 pipeline is not working, fix it first. Milestone 2 builds directly on top of it. Everything we do here assumes your Snowflake raw tables are populated and your dbt models are running.
 
 Here is an updated system overview showing where the new Milestone 2 components fit:
 
