@@ -165,9 +165,6 @@ Poke around a bit to make sure you're comfortable with what your agent built, an
 
 Use `prefect/agent_log.md` to document your development process: what worked, what didn't, what you'd do differently.
 
-> [!IMPORTANT]
-> 📷 Grab a screenshot of the Prefect flow running successfully (terminal output or Prefect UI showing a completed run). Save this screenshot as `m2_task2.3.png` (or jpg) to the `screenshots` folder in the assignment repository.
-
 ---
 
 ## Task 3: Integrate Web Analytics Data into dbt
