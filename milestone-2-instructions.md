@@ -20,7 +20,7 @@ Okay. Let's get to it.
 
 Make sure you have the following from Milestone 1:
 
-- [ ] Your Docker Compose environment is running (PostgreSQL, MongoDB, generator)
+- [ ] Your Docker Compose environment was successfully tested (but you don't have to leave it running!)
 - [ ] Your processor has successfully loaded data into Snowflake
 - [ ] Your dbt models are building and your dashboard is working
 - [ ] Your repository is committed and pushed to GitHub
