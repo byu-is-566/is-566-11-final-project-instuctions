@@ -189,9 +189,7 @@ SHOW STAGES IN SCHEMA RAW_EXT;
 
 ### 3.2 Create the dbt Source Definition
 
-Create `dbt/models-m2/staging/web_analytics/sources.yml`. This file should define `web_analytics_raw` as a dbt source, with column descriptions and tests. It should also configure source freshness (we'll use that in Task 4).
-
-Include a `relationships` test on `customer_id` that links back to your existing `stg_adventure_db__customers` model. This is how dbt validates referential integrity across your data sources.
+Create `dbt/models-m2/staging/web-analytics/sources.yml`. This file should define `web_analytics_raw` as a dbt source table. You can look at `dbt/models-m1/staging/sources.yml` as a reference if you need to remember how to format this new `sources.yml` file. (And while it might feel unnatural to add another sources file rather than just editing the previous one, don't worry – I'll show you how to integrate both down in Task 3.5.)
 
 ### 3.3 Create the Staging Model
 
@@ -204,9 +202,21 @@ Create `dbt/models-m2/staging/web_analytics/stg_web_analytics.sql`. Your staging
 
 Use your existing staging models (like `stg_adventure_db__customers.sql`) as a reference. Follow the same pattern: source CTE, cleaning CTE, final select.
 
+Before moving on, you may want to run `dbt build` to ensure that you have your `sources.yml` and `stg_web_analytics.sql` set up correctly. If you want to do so, you'll have to skip ahead to Task 3.5 and make sure to register the M2 model path in your dbt config.
+
 ### 3.4 Create the Intermediate Model
 
-Create `dbt/models-m2/intermediate/int_web_analytics_with_customers.sql`. This model should join your web analytics data with customer attributes from Milestone 1. After this model runs, you'll be able to answer questions like "Which customers from the US viewed the most product pages?"
+Create `dbt/models-m2/intermediate/int_web_analytics_with_customers.sql`. The purpose of this model is to enrich web analytics events with customer context from Milestone 1, so that downstream analysts can slice browsing behavior by customer attributes without writing joins themselves.
+
+Your intermediate model should:
+
+- **Start from your staging model** (`stg_web_analytics`) as the base — every clickstream event should appear in the output
+- **Join to your existing customer staging model** (`stg_adventure_db__customers`) on customer ID. Use a left join so that events are preserved even if a customer ID doesn't match (the API can generate IDs outside the customer dimension)
+- **Bring in useful customer attributes** alongside the event data — think about what an analyst would need to answer questions like "Which customers from the US viewed the most product pages?" or "What's the browsing pattern for customers in different regions?" You don't need every column from the customer model, just the ones that add analytical value (name, geography, contact info)
+- **Keep the event grain** — one row per clickstream event. Don't aggregate anything; this is an enrichment model, not a summary
+
+> [!TIP]
+> Look at the columns available in `stg_adventure_db__customers` to decide which customer attributes to pull in. Think about which fields would be most useful for filtering and grouping in a dashboard. Also pay attention to the data types on your join keys — they may not match between models, and Snowflake is strict about implicit casting.
 
 ### 3.5 Register the New Model Path
 
@@ -226,14 +236,11 @@ Run dbt to build the new models:
 dbt build --select stg_web_analytics int_web_analytics_with_customers
 ```
 
-> [!IMPORTANT]
-> If `dbt build` fails with "source not found", make sure you've run the DDL from Step 3.1 and that your Prefect flow has loaded at least one batch of data into `web_analytics_raw`. dbt can't build from an empty source.
-
-Verify your models in Snowflake:
+You should also verify your models in Snowflake:
 
 ```sql
-SELECT COUNT(*) FROM dbt.stg_web_analytics;
-SELECT * FROM dbt.int_web_analytics_with_customers LIMIT 10;
+SELECT COUNT(*) FROM dbt_dev.stg_web_analytics;
+SELECT * FROM dbt_dev.int_web_analytics_with_customers LIMIT 10;
 ```
 
 > [!IMPORTANT]
