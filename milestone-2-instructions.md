@@ -189,7 +189,13 @@ SHOW STAGES IN SCHEMA RAW_EXT;
 
 ### 3.2 Create the dbt Source Definition
 
-Create `dbt/models-m2/staging/web-analytics/sources.yml`. This file should define `web_analytics_raw` as a dbt source table. You can look at `dbt/models-m1/staging/sources.yml` as a reference if you need to remember how to format this new `sources.yml` file. (And while it might feel unnatural to add another sources file rather than just editing the previous one, don't worry – I'll show you how to integrate both down in Task 3.5.)
+Create `dbt/models-m2/staging/web_analytics/sources.yml`. This file defines `web_analytics_raw` as a dbt source. You can look at `dbt/models-m1/staging/sources.yml` as a reference for the basic structure. (And while it might feel unnatural to add another sources file rather than just editing the previous one, don't worry — I'll show you how to integrate both down in Task 3.5.)
+
+Your `sources.yml` should go beyond a bare table definition. Include:
+
+- **Column descriptions** for each field in `web_analytics_raw`
+- **Generic tests** on the source columns. Think about which columns should never be null, which have a known set of valid values, and which should link to an existing model in your warehouse. Look at how `models-m1/models.yml` defines `data_tests` for reference on the syntax.
+- **Source freshness configuration** so dbt can alert you when the raw table hasn't been updated recently. You'll need a `loaded_at_field` (which column tracks when events occurred?) and `warn_after` / `error_after` thresholds. Set them wide enough to handle periods when your Prefect flow isn't running — something like 12 hours for warn and 24 hours for error.
 
 ### 3.3 Create the Staging Model
 
@@ -201,6 +207,8 @@ Create `dbt/models-m2/staging/web_analytics/stg_web_analytics.sql`. Your staging
 - Add `dbt_loaded_at` metadata
 
 Use your existing staging models (like `stg_adventure_db__customers.sql`) as a reference. Follow the same pattern: source CTE, cleaning CTE, final select.
+
+Also create a companion schema file `dbt/models-m2/staging/web_analytics/stg_web_analytics.yml` that describes the model and adds `not_null` tests on the key columns (customer_id, product_id, session_id, event_timestamp). This is the same pattern you used in `models-m1/models.yml`.
 
 Before moving on, you may want to run `dbt build` to ensure that you have your `sources.yml` and `stg_web_analytics.sql` set up correctly. If you want to do so, you'll have to skip ahead to Task 3.5 and make sure to register the M2 model path in your dbt config.
 
@@ -218,6 +226,8 @@ Your intermediate model should:
 > [!TIP]
 > Look at the columns available in `stg_adventure_db__customers` to decide which customer attributes to pull in. Think about which fields would be most useful for filtering and grouping in a dashboard. Also pay attention to the data types on your join keys — they may not match between models, and Snowflake is strict about implicit casting.
 
+Also create `dbt/models-m2/intermediate/int_web_analytics_with_customers.yml` with a model description and `not_null` tests on the key columns (customer_id, session_id).
+
 ### 3.5 Register the New Model Path
 
 Your M2 models live in `dbt/models-m2/`, but dbt only knows about directories listed in `dbt_project.yml`. Open `dbt/dbt_project.yml` and add `"models-m2"` to the `model-paths` list:
@@ -230,11 +240,13 @@ Without this change, `dbt build` won't discover your new models.
 
 ### 3.6 Build and Verify
 
-Run dbt to build the new models:
+Run dbt to build the new models. My output from the command is shown, but note that yours may not match exactly because I think I have a few tests enabled that you won't have done just yet.
 
 ```bash
 dbt build --select stg_web_analytics int_web_analytics_with_customers
 ```
+
+<img src="screenshots/readme_img/int_web_analytics_with_customers.png"  width="80%">
 
 You should also verify your models in Snowflake:
 
@@ -244,10 +256,10 @@ SELECT * FROM dbt_dev.int_web_analytics_with_customers LIMIT 10;
 ```
 
 > [!IMPORTANT]
-> 📷 Grab a screenshot of your Snowflake raw table showing sample web analytics data. Save this screenshot as `m2_task3.6a.png` (or jpg) to the `screenshots` folder in the assignment repository.
+> 📷 Grab a screenshot of `dbt build` output showing the new models created successfully. Save this screenshot as `m2_task3.6a.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 > [!IMPORTANT]
-> 📷 Grab a screenshot of `dbt build` output showing the new models created successfully. Save this screenshot as `m2_task3.6b.png` (or jpg) to the `screenshots` folder in the assignment repository.
+> 📷 Grab a screenshot of the `int_web_analytics_with_customers` model in Snowflake showing sample rows with customer attributes joined to clickstream events. Save this screenshot as `m2_task3.6b.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
 **Deliverables:** New dbt models, updated sources.yml
 
@@ -257,19 +269,19 @@ SELECT * FROM dbt_dev.int_web_analytics_with_customers LIMIT 10;
 
 We've been testing our models since Assignment 10. In this milestone, we're expanding those tests to cover our new web analytics data and adding source freshness checks. Data quality is not optional on a real data team. Bad data that slips through undetected will show up in dashboards, confuse analysts, and erode trust in the data platform.
 
-### 4.1 Add Generic Tests to Web Analytics Models
+### 4.1 Review Your Generic Tests
 
-The source and model YAML files already include tests for the critical columns:
+In Task 3, you added generic tests to your YAML files (`sources.yml`, `stg_web_analytics.yml`, and `int_web_analytics_with_customers.yml`). Before moving on, review them and make sure you have coverage on the critical columns:
 
-- `not_null` on customer_id, product_id, session_id, event_timestamp
-- `accepted_values` on event_type
-- `relationships` on customer_id (linking to customers)
+- `not_null` on customer_id, product_id, session_id, and event_timestamp
+- `accepted_values` on event_type (the API guarantees four valid values — your test should enforce that)
+- `relationships` on customer_id linking back to `stg_adventure_db__customers` (this validates referential integrity across your data sources)
 
-Review these in `sources.yml`, `stg_web_analytics.yml`, and `int_web_analytics_with_customers.yml`. Make sure you understand what each test does and why it matters.
+If any of these are missing from your YAML files, add them now. These tests will run as part of `dbt build` and catch data quality issues before they reach your intermediate models.
 
-### 4.2 Configure Source Freshness
+### 4.2 Verify Source Freshness
 
-The `sources.yml` file includes freshness configuration:
+In Task 3.2, you added freshness configuration to your `sources.yml`. It should look something like this:
 
 ```yaml
 freshness:
