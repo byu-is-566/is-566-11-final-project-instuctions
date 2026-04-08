@@ -39,49 +39,40 @@ The Model Context Protocol (MCP) is an open standard that lets AI agents discove
 
 Why does this matter? Because data engineers are increasingly responsible for making data accessible not just to dashboards and reports, but to AI agents. An agent that can browse your dbt models, read your column descriptions, and compile SQL is a fundamentally different consumer than a human looking at a chart. Understanding this shift is valuable, both for your career and for this project's portfolio value.
 
-### 1.1 - Install Prerequisites
+> [!IMPORTANT]
+> **Updated instructions:** The MCP server now runs in Docker Compose instead of locally. Follow the step-by-step setup guide in **`m3_dbt_docker_setup.md`** to create the required files, then return here to continue with section 1.3 (verification).
 
-The dbt MCP server runs **locally** on your machine (not in Docker). It's distributed as a Python package and launched via `uvx`. You'll need:
+### 1.1 - Prerequisites
 
-1. **`uv` installed** — if you don't have it, follow the [install guide](https://docs.astral.sh/uv/getting-started/installation/)
-2. **`dbt` CLI on your PATH** — verify with `which dbt`. If not found, install with `uv tool install dbt-snowflake`
-3. **`profiles.yml` in your `dbt/` directory** — the MCP server reads your dbt project from `./dbt`, including profiles. If your `profiles.yml` is at `~/.dbt/profiles.yml`, copy it:
+Before setting up the MCP server, make sure you have:
+
+1. **Docker Desktop running** — you've been using it since Milestone 1
+2. **Milestones 1 and 2 complete** — your dbt models must build, and `dbt/models-m2/` must exist
+3. **Valid Snowflake credentials in your `.env` file** — the MCP container reads from the same `.env` as your other services
+4. **`uv` installed** — needed to generate a lock file and later for the demo client ([install guide](https://docs.astral.sh/uv/getting-started/installation/))
+
+### 1.2 - Create Files and Start the MCP Server
+
+Follow the **`m3_dbt_docker_setup.md`** guide to create five new files in your `dbt/` directory and update your `compose.yml`. The guide walks you through each file and explains what it does and why.
+
+Once you've completed the setup guide, start the MCP server:
 
 ```bash
-cp ~/.dbt/profiles.yml ./dbt/profiles.yml
+docker compose up --build dbt-mcp
 ```
 
-### 1.2 - Start the MCP Server
-
-Open a terminal, **`cd` into your `dbt/` directory**, and run:
-
-```bash
-cd dbt
-MCP_TRANSPORT=sse \
-DBT_PROJECT_DIR=. \
-DBT_PROFILES_DIR=. \
-uvx dbt-mcp
-```
-
-Here's what each part does:
-
-- **`cd dbt`**: The server must run from inside the `dbt/` directory so it can find the `target/manifest.json` file that dbt generates. Some MCP tools (like lineage) look for it relative to the current working directory.
-- **`MCP_TRANSPORT=sse`**: The server will use Server-Sent Events (SSE) over HTTP. This means our Python demo client can connect via a simple HTTP URL.
-- **`DBT_PROJECT_DIR` and `DBT_PROFILES_DIR`**: Tell the MCP server where to find your dbt project and Snowflake connection profiles. Since we're already in `dbt/`, both are `.` (current directory).
-- **`uvx dbt-mcp`**: Downloads and runs the dbt MCP server package from PyPI.
-
-You should see output like:
+You should see three phases: seeding, compiling, then the server starting:
 
 ```
+==> Seeding dbt project...
+==> Compiling dbt project to generate target/manifest.json...
+==> Starting dbt MCP server on port 8000...
 INFO [dbt_mcp.mcp.server] Registering dbt cli tools
 INFO [dbt_mcp.mcp.server] Registering dbt codegen tools
-INFO:     Uvicorn running on http://127.0.0.1:8000
+INFO:     Uvicorn running on http://0.0.0.0:8000
 ```
 
-**Leave this terminal running.** Open a new terminal for the next steps.
-
-> [!TIP]
-> If you see `BinaryExecutionError: Cannot execute binary dbt`, make sure `dbt` is on your PATH. Install it with `uv tool install dbt-snowflake`, then verify with `which dbt`.
+**Leave this terminal running** (or add `-d` to run in the background). Open a new terminal for the next steps.
 
 ### 1.3 - Verify Server is Running
 
@@ -102,14 +93,22 @@ If you get "Connection refused," the server hasn't finished starting. Wait a few
 
 ### 1.4 - Troubleshooting
 
-If things aren't working, check these common issues:
+If things aren't working, check the container logs first:
 
-- **"Connection refused"**: The server may still be starting, or it crashed. Check the terminal where you ran `uvx dbt-mcp` for error messages.
-- **Snowflake authentication errors**: Verify your credentials work by running `cd dbt && dbt debug`.
-- **"Cannot execute binary dbt"**: Install dbt: `uv tool install dbt-snowflake`
-- **"DBT_PROJECT_DIR environment variable is required"**: You forgot an env var. Include all three: `MCP_TRANSPORT`, `DBT_PROJECT_DIR`, `DBT_PROFILES_DIR`.
-- **dbt project not found**: Make sure you're running from inside the `dbt/` directory and that `dbt_project.yml` and `profiles.yml` both exist there.
-- **"No such file or directory: './target/manifest.json'"**: You started the server from the project root instead of the `dbt/` directory. Run `cd dbt` first, then start the server with `DBT_PROJECT_DIR=.`.
+```bash
+docker compose logs dbt-mcp
+```
+
+Common issues:
+
+- **"Connection refused"**: The container may still be building, seeding, or compiling. Wait for the "Uvicorn running" message in the logs before testing.
+- **Build fails on `COPY models-m2/`**: Your Milestone 2 models directory doesn't exist yet. Complete M2 first.
+- **Snowflake authentication errors during seed/compile**: Your `.env` file may have incorrect Snowflake credentials. Verify that your other services (processor, Prefect) can still connect.
+- **Port 8000 already in use**: If you previously ran the MCP server locally, make sure it's stopped (Ctrl+C). Only one process can use port 8000.
+- **Container exits immediately / restart loop**: Check the logs. Common causes include missing `profiles.yml`, suspended Snowflake warehouse, or dbt compile errors.
+
+> [!TIP]
+> If Docker gives you trouble, a local fallback approach is documented in the appendix of `m3_dbt_docker_setup.md`.
 
 ### Verification
 

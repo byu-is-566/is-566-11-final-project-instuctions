@@ -342,7 +342,10 @@ Follow the step-by-step instructions in `templates/m2/dbt_cloud_setup.md` to:
 
 ### 5.1 Replace Your Lab Project
 
-You already have a dbt Cloud account from the earlier lab assignment. Delete your old lab project (free tier only allows one), then create a new project connected to your `is-566-11-final-project` repo with the subdirectory set to `dbt/`.
+You already have a dbt Cloud account from the earlier lab assignment. Delete your old lab project (free tier only allows one), then create a new project connected to your `is-566-11-final-project` repo with the subdirectory set to `dbt`.
+
+> [!IMPORTANT]
+> **Correction:** When setting the project subdirectory in dbt Cloud, use `dbt` (no trailing slash). dbt Cloud now rejects paths ending with `/`. If the setup guide in your repo says `dbt/`, use `dbt` instead.
 
 ### 5.2 Verify Snowflake Connection
 
