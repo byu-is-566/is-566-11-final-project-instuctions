@@ -40,7 +40,7 @@ The Model Context Protocol (MCP) is an open standard that lets AI agents discove
 Why does this matter? Because data engineers are increasingly responsible for making data accessible not just to dashboards and reports, but to AI agents. An agent that can browse your dbt models, read your column descriptions, and compile SQL is a fundamentally different consumer than a human looking at a chart. Understanding this shift is valuable, both for your career and for this project's portfolio value.
 
 > [!IMPORTANT]
-> **Updated instructions:** The MCP server now runs in Docker Compose instead of locally. Follow the step-by-step setup guide in **`m3_dbt_docker_setup.md`** to create the required files, then return here to continue with section 1.3 (verification).
+> **Updated instructions:** The MCP server now runs in Docker Compose instead of locally. Follow the step-by-step setup guide in [**`m3_dbt_docker_setup.md`**](m3_dbt_docker_setup.md) (here in the instructions repo) to create the required files, then return here to continue with section 1.3 (verification).
 
 ### 1.1 - Prerequisites
 
