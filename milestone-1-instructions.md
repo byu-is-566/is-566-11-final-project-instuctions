@@ -206,6 +206,9 @@ Once you've implemented the functions, rebuild the Docker image and start all se
 docker compose up --build
 ```
 
+> [!TIP]
+> **Mind your Snowflake credits.** Every processor cycle that runs while this stack is up consumes credits from your daily quota, and it's very easy to walk away and forget that it's running. Before you run this command, skim [`managing_snowflake_credits.md`](managing_snowflake_credits.md) for credit-conservation habits — especially about stopping Docker (`docker compose down`) whenever you're not actively working.
+
 > [!WARNING]
 > **Snowflake credit usage:** Every time the processor runs a cycle, it uses your Snowflake warehouse (which costs credits). The default `PROCESSOR_INTERVAL_SEC=0` runs one cycle and exits — this is the safest option during development. If you change it to `300` for continuous operation, the processor and generator will automatically shut down after 1 hour (`PROCESSOR_MAX_RUNTIME_SEC=3600` in `.env`). You can change this timeout or set it to `0` to run indefinitely — but **remember to stop it when you're done** (`docker compose down`). Your warehouse has resource monitors attached which will limit your daily credit consumption, and your warehouse will auto-suspend for the day if you exceed a reasonable usage threshold.
 
@@ -275,7 +278,10 @@ Now that the raw data from our two sources is flowing into Snowflake automatical
 > 2. Note also that, for various reasons, the sales data coming out of the generator system do NOT have any delivery estimate information. This is expected. That column can be empty for the records you're generating for this lab.
 
 - **Adhere to dbt best practices**: Organize your models properly in the project structure, probably using the same hierarchy that we've already been using. Again, your goal is to integrate your new functionality into the existing flow of data. (And you can use my directory tree up above if that helps, but you don't have to follow it exactly.)
-- **Test and iterate**: Run your dbt models to materialize the new tables, and verify the results. Check that the data looks correct (especially that your newly added data is showing up). The data being generated in the docker environment has _current_ dates, so this will be easy to verify. I have provided a few of sample queries to help you make sure you got this right: see the `sql/check_data_flow_queries.sql` file in the repository. 
+- **Test and iterate**: Run your dbt models to materialize the new tables, and verify the results. Check that the data looks correct (especially that your newly added data is showing up). The data being generated in the docker environment has _current_ dates, so this will be easy to verify. I have provided a few of sample queries to help you make sure you got this right: see the `sql/check_data_flow_queries.sql` file in the repository.
+
+> [!TIP]
+> **Mind your Snowflake credits.** Iterating on dbt models is one of the easiest ways to burn through your daily quota — every `dbt build` rebuilds models and runs tests against your warehouse. Skim [`managing_snowflake_credits.md`](managing_snowflake_credits.md) before you start iterating, especially the section on using `dbt build --select` to scope your builds to just the models you're actively working on.
 
 > >[!TIP] 
 > The `check_data_flow_queries.sql` file I originally distributed in the assignment had a bug in it. (Sorry!) If you're getting an error when you try to run some of the queries, you can find the fixed file posted and pinned to the `#help-please` channel in Slack. (Or you can just replace the usage of `rows` in queries 3 and 6 with a non-protected column name like `row_count`.)

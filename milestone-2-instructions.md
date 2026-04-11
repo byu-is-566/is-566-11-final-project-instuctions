@@ -143,6 +143,9 @@ Verify your flow works end-to-end:
    docker compose logs -f web-analytics-flow
    ```
 
+   > [!TIP]
+   > **Mind your Snowflake credits.** Prefect flows that run on a schedule hit your Snowflake warehouse on every cycle, and this is easy to leave running in the background without realizing it. Skim [`managing_snowflake_credits.md`](managing_snowflake_credits.md) before you start — especially about stopping Prefect services (`docker compose down`) when you're not actively testing.
+
 4. **Verify in Snowflake**: Check that data landed in `RAW_EXT.web_analytics_raw`:
    ```sql
    SELECT COUNT(*), MIN(event_timestamp), MAX(event_timestamp) FROM RAW_EXT.web_analytics_raw;
@@ -353,7 +356,10 @@ Your Snowflake credentials should carry over. Test the connection and set the pr
 
 ### 5.4 Create a Scheduled Job
 
-Set up a job called "Scheduled dbt Build" that runs `dbt build` on a schedule (daily or hourly).
+Set up a job called "Scheduled dbt Build" that runs `dbt build` on a **daily** schedule (e.g., once at 8:00 AM).
+
+> [!TIP]
+> **Mind your Snowflake credits.** dbt Cloud scheduled jobs are one of the fastest ways to drain your daily quota — one student set theirs to hourly and woke up at 5 AM completely out of credits. **Choose a daily schedule, not hourly**, and keep your CI job lean. Skim [`managing_snowflake_credits.md`](managing_snowflake_credits.md) for more on why this matters and what else to watch out for.
 
 ### 5.5 Create a CI/CD Job
 
