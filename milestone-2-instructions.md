@@ -307,7 +307,7 @@ Two custom test files are provided in `templates/m2/` (copy them to `dbt/tests/`
 
 1. **`web_analytics_row_count_minimum.sql`** - Already implemented. Verifies that `stg_web_analytics` has at least 50 rows. A simple smoke test to catch empty tables.
 
-2. **`web_analytics_freshness_check.sql`** - This one has a `TODO` for you. Implement the SQL that checks whether the most recent `event_timestamp` in `stg_web_analytics` is within 4 hours. The comments in the file explain what to do.
+2. **`web_analytics_freshness_check.sql`** - This one has a `TODO` for you. Implement the SQL that checks whether the most recent `event_timestamp` in `stg_web_analytics` is within 24 hours (matching the error threshold from the source freshness config in Task 4.2). The comments in the file explain what to do.
 
 > [!TIP]
 > Use Snowflake's `DATEDIFF` function and `MAX` aggregate. The test should return rows only when data is stale (that's how dbt custom tests work: returning rows means failure).
