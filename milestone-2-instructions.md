@@ -369,8 +369,8 @@ Set up a second job called "CI - Pull Request Tests" that runs `dbt build` on ev
 
 Manually trigger your scheduled job and confirm it completes successfully. Then create a test branch, push a small change, and open a pull request to verify the CI job runs.
 
-> [!IMPORTANT]
-> The `templates/m2/dbt_cloud_setup.md` file has detailed instructions for each step, including troubleshooting tips for common issues. Follow it carefully and take screenshots at each checkpoint.
+> [!NOTE]
+> The `templates/m2/dbt_cloud_setup.md` file in your starter repo is a **walkthrough guide**, not a deliverable. You don't need to edit it. It has detailed step-by-step instructions and troubleshooting tips you can follow as you work. The "screenshot checkpoints" scattered throughout that file are optional suggestions to help you capture your own progress — they are NOT separate required deliverables. The only screenshots you need to submit are the three listed below.
 
 > [!IMPORTANT]
 > 📷 Grab a screenshot of your dbt Cloud project dashboard. Save this screenshot as `m2_task5.6a.png` (or jpg) to the `screenshots` folder in the assignment repository.
@@ -381,7 +381,7 @@ Manually trigger your scheduled job and confirm it completes successfully. Then 
 > [!IMPORTANT]
 > 📷 Grab a screenshot of a pull request with the CI job running. Save this screenshot as `m2_task5.6c.png` (or jpg) to the `screenshots` folder in the assignment repository.
 
-**Deliverables:** Completed `templates/m2/dbt_cloud_setup.md` with evidence, working scheduled and CI jobs
+**Deliverables:** The three screenshots above (`m2_task5.6a`, `m2_task5.6b`, `m2_task5.6c`) plus working scheduled and CI jobs in dbt Cloud.
 
 ---
 
