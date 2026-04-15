@@ -50,6 +50,7 @@ adventure-ops:
 > **Impact on local `dbt build`:** If you run `dbt build` from the `dbt/` directory, dbt will find this `profiles.yml` and try to use it. For that to work, your `SNOWFLAKE_*` environment variables must be set. You can either:
 > - Continue using your `~/.dbt/profiles.yml` by running `dbt build --profiles-dir ~/.dbt`
 > - Or export your env vars first: `set -a; source ../.env; set +a; dbt build`
+> - **Windows (PowerShell):** `Get-Content ../.env | ForEach-Object { if ($_ -match '^\s*([^#=\s]+)\s*=\s*(.*)$') { Set-Item "env:$($matches[1])" $matches[2] } }; dbt build`
 
 ---
 
@@ -145,6 +146,9 @@ Then make it executable:
 ```bash
 chmod +x dbt/entrypoint.sh
 ```
+
+> [!NOTE]
+> **Windows users:** skip this step. `chmod` doesn't exist in PowerShell, and the `Dockerfile` already runs `RUN chmod +x entrypoint.sh` inside the Linux container — which is the only place the executable bit actually needs to be set.
 
 **What each step does:**
 - **`dbt seed`** loads any seed CSV files into Snowflake (these are reference data files in your `seeds/` directory)
@@ -257,6 +261,8 @@ From a **separate terminal**, verify the SSE endpoint:
 curl -s http://localhost:8000/sse | head -3
 ```
 
+> **Windows (PowerShell):** `curl.exe -s http://localhost:8000/sse | Select-Object -First 3`
+
 You should see:
 
 ```
@@ -316,6 +322,22 @@ cd dbt
 MCP_TRANSPORT=sse \
 DBT_PROJECT_DIR=. \
 DBT_PROFILES_DIR=. \
+uvx dbt-mcp
+```
+
+**Windows (PowerShell):**
+
+```powershell
+# Install dbt if not already available
+uv tool install dbt-snowflake
+
+# From the dbt directory
+cd dbt
+
+# Start the MCP server
+$env:MCP_TRANSPORT = "sse"
+$env:DBT_PROJECT_DIR = "."
+$env:DBT_PROFILES_DIR = "."
 uvx dbt-mcp
 ```
 

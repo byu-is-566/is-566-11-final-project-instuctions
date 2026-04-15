@@ -31,6 +31,9 @@ A few orienting notes:
 > [!IMPORTANT]
 > This milestone has two major components. **Component A** (Tasks 1-4) is about setting up the MCP server and demonstrating agent interaction. **Component B** (Task 5) is about finalizing your portfolio documentation. Both are required, and both matter for your grade.
 
+> [!NOTE]
+> **Windows users:** Several shell commands in this milestone are written for macOS/Linux (bash). Each one has a PowerShell equivalent called out in a blockquote directly below the command. Use the PowerShell version from your Windows terminal.
+
 ---
 
 ## Task 1: Set Up the dbt MCP Server
@@ -82,6 +85,8 @@ From a **separate terminal**, test the SSE endpoint:
 curl -s http://localhost:8000/sse | head -3
 ```
 
+> **Windows (PowerShell):** `curl.exe -s http://localhost:8000/sse | Select-Object -First 3`
+
 You should see an SSE event stream like:
 
 ```
@@ -112,7 +117,7 @@ Common issues:
 
 ### Verification
 
-- [ ] `curl -s http://localhost:8000/sse | head -3` returns an SSE event stream
+- [ ] `curl -s http://localhost:8000/sse | head -3` returns an SSE event stream (Windows: `curl.exe -s http://localhost:8000/sse | Select-Object -First 3`)
 - [ ] The server terminal shows no Snowflake authentication errors
 - [ ] Server logs show "Registering dbt cli tools"
 
@@ -201,6 +206,8 @@ grep -A1 "name:" dbt/models-m1/models.yml | grep -B1 'description: ""'
 
 # Or, more simply, open the file and scan for any empty description fields
 ```
+
+> **Windows (PowerShell):** `Select-String -Path dbt/models-m1/models.yml -Pattern 'description: ""'`
 
 Every `description:` field should have meaningful content. No empty strings, no single-word descriptions, no descriptions that just repeat the column name.
 
@@ -465,8 +472,8 @@ Metrics to quantify:
 |--------|-----------------|
 | Records per cycle | Query raw table counts |
 | Pipeline execution time | Time your Docker Compose processor run |
-| dbt model count | `dbt ls --resource-type model \| wc -l` |
-| dbt test count | `dbt ls --resource-type test \| wc -l` |
+| dbt model count | macOS/Linux: `dbt ls --resource-type model \| wc -l` &nbsp; • &nbsp; Windows: `(dbt ls --resource-type model).Count` |
+| dbt test count | macOS/Linux: `dbt ls --resource-type test \| wc -l` &nbsp; • &nbsp; Windows: `(dbt ls --resource-type test).Count` |
 | Test pass rate | `dbt test` and count pass/fail |
 | Data sources integrated | Count your sources in sources.yml |
 | Models exposed via MCP | Count from demo script output |
