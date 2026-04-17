@@ -530,10 +530,9 @@ git push origin main
 
 ### What to Submit
 
-1. Your GitHub repository URL
-2. Screenshots for Tasks 1, 2, 3, and 5 (saved in `screenshots/`)
-3. The completed `agent_access_reflection.md`
-4. The `mcp/demo_output.log` file (committed to your repo)
+1. Screenshots for Tasks 1, 2, 3, and 5 (saved in `screenshots/`)
+2. The completed `agent_access_reflection.md`
+3. The `mcp/demo_output.log` file (committed to your repo)
 
 ### Looking Ahead
 
