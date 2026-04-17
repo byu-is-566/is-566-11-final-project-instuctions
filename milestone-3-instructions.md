@@ -82,10 +82,10 @@ INFO:     Uvicorn running on http://0.0.0.0:8000
 From a **separate terminal**, test the SSE endpoint:
 
 ```bash
-curl -s http://localhost:8000/sse | head -3
+curl -sN http://localhost:8000/sse | head -3
 ```
 
-> **Windows (PowerShell):** `curl.exe -s http://localhost:8000/sse | Select-Object -First 3`
+> **Windows (PowerShell):** `curl.exe -sN http://localhost:8000/sse | Select-Object -First 3`
 
 You should see an SSE event stream like:
 
@@ -117,7 +117,7 @@ Common issues:
 
 ### Verification
 
-- [ ] `curl -s http://localhost:8000/sse | head -3` returns an SSE event stream (Windows: `curl.exe -s http://localhost:8000/sse | Select-Object -First 3`)
+- [ ] `curl -sN http://localhost:8000/sse | head -3` returns an SSE event stream (Windows: `curl.exe -sN http://localhost:8000/sse | Select-Object -First 3`)
 - [ ] The server terminal shows no Snowflake authentication errors
 - [ ] Server logs show "Registering dbt cli tools"
 

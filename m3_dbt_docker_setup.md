@@ -258,10 +258,10 @@ You should see three phases in the output:
 From a **separate terminal**, verify the SSE endpoint:
 
 ```bash
-curl -s http://localhost:8000/sse | head -3
+curl -sN http://localhost:8000/sse | head -3
 ```
 
-> **Windows (PowerShell):** `curl.exe -s http://localhost:8000/sse | Select-Object -First 3`
+> **Windows (PowerShell):** `curl.exe -sN http://localhost:8000/sse | Select-Object -First 3`
 
 You should see:
 
